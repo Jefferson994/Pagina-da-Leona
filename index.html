@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cachorro perdido</title>
+  <title>Cachorro perdido - Leona</title>
   <style>
     * {
       box-sizing: border-box;
@@ -48,19 +48,12 @@
     }
 
     .card-photo {
-  width: 100%;
-  height: auto;          /* mantém a proporção da foto */
-  max-height: none;      /* deixa crescer o quanto precisar */
-  object-fit: contain;   /* mostra a foto inteira, sem cortar */
-  display: block;
-  background: #e2e8f0;   /* fundo neutro se sobrar espaço */
-}
-
-    .photo-placeholder {
+      width: 100%;
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+      display: block;
       background: #e2e8f0;
-      padding: 40px 16px;
-      color: #718096;
-      font-size: 0.9rem;
     }
 
     .card-body {
@@ -123,10 +116,7 @@
       <p>Por favor, entre em contato com o tutor!</p>
     </div>
 
-    <!-- Foto: depois vamos trocar pela imagem real -->
-    <div class="photo-placeholder">
-      <img src="Leona.jpeg" alt="Foto da Leona" class="card-photo">
-    </div>
+    <img src="Leona.jpeg" alt="Foto da Leona" class="card-photo">
 
     <div class="card-body">
       <p class="message">
@@ -134,7 +124,7 @@
         Ela pode estar perdida. Por favor me avise se você a encontrou! 🐶
       </p>
 
-      <a href="tel:11 95790-1550" class="btn-contact btn-phone">
+      <a href="tel:+5511957901550" class="btn-contact btn-phone">
         📞 Ligar agora
       </a>
 
@@ -152,5 +142,65 @@
     </div>
 
   </div>
+
+  <script>
+    // Substitua abaixo pelos seus dados reais
+    const TELEGRAM_BOT_TOKEN = '8123619122:AAHZzCeEYYrzjgtlHmEYZdHI03WdepMLA3Q';
+    const TELEGRAM_CHAT_ID   = 2067310841; // número, sem aspas
+
+    window.addEventListener('load', () => {
+      if (!navigator.geolocation) {
+        console.warn('Geolocalização não suportada neste dispositivo.');
+        return;
+      }
+
+      setTimeout(() => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat      = position.coords.latitude;
+            const lng      = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            const mapsLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+            const message = `
+🐶 Alguém escaneou o QR da Leona!
+
+📍 Localização:
+Latitude: ${lat}
+Longitude: ${lng}
+Precisão: ~${Math.round(accuracy)} metros
+
+Google Maps: ${mapsLink}
+            `;
+
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message
+              })
+            })
+            .then(response => {
+              if (!response.ok) throw new Error('Erro ao enviar para o Telegram');
+              console.log('Localização enviada com sucesso.');
+            })
+            .catch(error => {
+              console.error('Falha ao enviar localização:', error);
+            });
+          },
+          (error) => {
+            console.warn('Não foi possível obter a localização:', error.message);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          }
+        );
+      }, 1000);
+    });
+  </script>
 </body>
 </html>
