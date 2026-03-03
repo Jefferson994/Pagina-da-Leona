@@ -80,6 +80,8 @@
       text-decoration: none;
       margin-bottom: 12px;
       transition: opacity 0.2s;
+      border: none;
+      cursor: pointer;
     }
 
     .btn-contact:active {
@@ -99,6 +101,28 @@
     .btn-email {
       background: #718096;
       color: white;
+    }
+
+    .btn-location {
+      background: #F39C12;
+      color: white;
+    }
+
+    .btn-location:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 16px 0;
+    }
+
+    .divider-text {
+      font-size: 0.8rem;
+      color: #999;
+      margin-bottom: 12px;
     }
 
     .card-footer {
@@ -135,6 +159,14 @@
       <a href="mailto:gislainesouza02@hotmail.com" class="btn-contact btn-email">
         ✉️ Enviar e-mail
       </a>
+
+      <hr class="divider">
+      <p class="divider-text">ou se preferir, envie sua localização diretamente</p>
+
+      <button id="btn-location" class="btn-contact btn-location">
+        📍 Enviar minha localização para o tutor
+      </button>
+
     </div>
 
     <div class="card-footer">
@@ -144,27 +176,26 @@
   </div>
 
   <script>
-    // Substitua abaixo pelos seus dados reais
     const TELEGRAM_BOT_TOKEN = '8123619122:AAHZzCeEYYrzjgtlHmEYZdHI03WdepMLA3Q';
     const TELEGRAM_CHAT_ID   = 2067310841; // número, sem aspas
 
-    window.addEventListener('load', () => {
+    function enviarLocalizacao(origem, callback) {
       if (!navigator.geolocation) {
         console.warn('Geolocalização não suportada neste dispositivo.');
         return;
       }
 
-      setTimeout(() => {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat      = position.coords.latitude;
-            const lng      = position.coords.longitude;
-            const accuracy = position.coords.accuracy;
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat      = position.coords.latitude;
+          const lng      = position.coords.longitude;
+          const accuracy = position.coords.accuracy;
 
-            const mapsLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+          const mapsLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
-            const message = `
+          const message = `
 🐶 Alguém escaneou o QR da Leona!
+📌 Origem: ${origem}
 
 📍 Localização:
 Latitude: ${lat}
@@ -172,34 +203,59 @@ Longitude: ${lng}
 Precisão: ~${Math.round(accuracy)} metros
 
 Google Maps: ${mapsLink}
-            `;
+          `;
 
-            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message
-              })
+          fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: message
             })
-            .then(response => {
-              if (!response.ok) throw new Error('Erro ao enviar para o Telegram');
-              console.log('Localização enviada com sucesso.');
-            })
-            .catch(error => {
-              console.error('Falha ao enviar localização:', error);
-            });
-          },
-          (error) => {
-            console.warn('Não foi possível obter a localização:', error.message);
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-          }
-        );
+          })
+          .then(response => {
+            if (!response.ok) throw new Error('Erro ao enviar para o Telegram');
+            console.log('Localização enviada com sucesso.');
+            if (callback) callback(true);
+          })
+          .catch(error => {
+            console.error('Falha ao enviar localização:', error);
+            if (callback) callback(false);
+          });
+        },
+        (error) => {
+          console.warn('Não foi possível obter a localização:', error.message);
+          if (callback) callback(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    }
+
+    // Pop-up automático ao carregar a página
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        enviarLocalizacao('Pop-up automático');
       }, 1000);
+    });
+
+    // Botão manual
+    const btnLocation = document.getElementById('btn-location');
+    btnLocation.addEventListener('click', () => {
+      btnLocation.disabled = true;
+      btnLocation.textContent = '📍 Enviando localização...';
+
+      enviarLocalizacao('Botão manual', (sucesso) => {
+        if (sucesso) {
+          btnLocation.textContent = '✅ Localização enviada!';
+        } else {
+          btnLocation.textContent = '❌ Não foi possível enviar';
+          btnLocation.disabled = false;
+        }
+      });
     });
   </script>
 </body>
