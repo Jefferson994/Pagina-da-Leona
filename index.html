@@ -48,11 +48,13 @@
     }
 
     .card-photo {
-      width: 100%;
-      max-height: 280px;
-      object-fit: cover;
-      display: block;
-    }
+  width: 100%;
+  height: auto;          /* mantém a proporção da foto */
+  max-height: none;      /* deixa crescer o quanto precisar */
+  object-fit: contain;   /* mostra a foto inteira, sem cortar */
+  display: block;
+  background: #e2e8f0;   /* fundo neutro se sobrar espaço */
+}
 
     .photo-placeholder {
       background: #e2e8f0;
