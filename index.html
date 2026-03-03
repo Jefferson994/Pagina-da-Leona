@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cachorro perdido</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-width: 480px;
+      width: 100%;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .card-header {
+      background: #F00699;
+      padding: 20px 16px;
+      color: white;
+    }
+
+    .card-header h1 {
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .card-header p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .card-photo {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-placeholder {
+      background: #e2e8f0;
+      padding: 40px 16px;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .card-body {
+      padding: 20px 16px;
+    }
+
+    .card-body .message {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn-contact {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-contact:active {
+      opacity: 0.8;
+    }
+
+    .btn-phone {
+      background: #3182ce;
+      color: white;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+      color: white;
+    }
+
+    .btn-email {
+      background: #718096;
+      color: white;
+    }
+
+    .card-footer {
+      padding: 12px 16px 20px;
+      font-size: 0.8rem;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="card-header">
+      <h1>Encontrou a <strong>Leona</strong>?</h1>
+      <p>Por favor, entre em contato com o tutor!</p>
+    </div>
+
+    <!-- Foto: depois vamos trocar pela imagem real -->
+    <div class="photo-placeholder">
+      📷 Foto do cachorro será colocada aqui
+    </div>
+
+    <div class="card-body">
+      <p class="message">
+        Olá! Meu nome é <strong>Gislaine</strong> e esta é a minha cachorra. 
+        Ela pode estar perdida. Por favor me avise se você a encontrou — 
+        ficarei muito grata! 🐶
+      </p>
+
+      <a href="tel:11 95790-1550" class="btn-contact btn-phone">
+        📞 Ligar agora
+      </a>
+
+      <a href="https://wa.me/5511957901550" target="_blank" class="btn-contact btn-whatsapp">
+        💬 Falar no WhatsApp
+      </a>
+
+      <a href="mailto:gislainesouza02@hotmail.com" class="btn-contact btn-email">
+        ✉️ Enviar e-mail
+      </a>
+    </div>
+
+    <div class="card-footer">
+      Escaneou o QR Code da plaquinha do pet 🐾
+    </div>
+
+  </div>
+</body>
+</html>
